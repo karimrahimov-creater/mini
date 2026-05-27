@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Калимаёб - Вордли бо забони тоҷикӣ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+            transition: background 0.8s ease-in-out, color 0.5s ease-in-out;
+        }
+        @keyframes flipIn {
+            0% { transform: rotateX(0deg); }
+            45% { transform: rotateX(90deg); }
+            55% { transform: rotateX(90deg); }
+            100% { transform: rotateX(0deg); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            15%, 45%, 75% { transform: translateX(-8px); }
+            30%, 60%, 90% { transform: translateX(8px); }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes bounceSuccess {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.15); }
+        }
+        .animate-flip {
+            animation: flipIn 0.6s ease-in-out forwards;
+        }
+        .animate-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        .animate-pop {
+            animation: popIn 0.15s ease-out forwards;
+        }
+        .animate-bounce-success {
+            animation: bounceSuccess 0.6s ease-in-out 3;
+        }
+        .ambient-aurora {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -10;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            animation: pulseGlow 8s ease-in-out infinite;
+            transition: all 1.2s ease-in-out;
+        }
+        .light-theme .ambient-aurora {
+            mix-blend-mode: multiply;
+            opacity: 0.12;
+        }
+        .light-theme {
+            background-color: #fdfdfb !important;
+            color: #1e293b !important;
+        }
+        .light-theme .keyboard-btn {
+            background-color: #f1f5f9 !important;
+            color: #334155 !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 2px 0px #cbd5e1 !important;
+        }
+        .light-theme .keyboard-btn:active {
+            transform: translateY(2px);
+            box-shadow: none !important;
+        }
+        .light-theme .menu-card {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between overflow-hidden relative">
+
+    <!-- Ambient Glow Background Elements -->
+    <div id="glow-bg-1" class="ambient-aurora w-80 h-80 top-1/4 -left-10 bg-emerald-500/10"></div>
+    <div id="glow-bg-2" class="ambient-aurora w-96 h-96 bottom-1/4 -right-20 bg-teal-500/10"></div>
+
+    <!-- MAIN MENU SCREEN -->
+    <div id="screen-menu" class="fixed inset-0 bg-slate-950/95 flex flex-col items-center justify-center p-6 z-50 transition-all duration-500">
+        <div class="text-center max-w-sm w-full space-y-8 animate-pop menu-card p-6 rounded-3xl">
+            <div class="space-y-2">
+                <span class="text-xs font-black uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20 shadow-sm">Бозии Миллӣ 🇹🇯</span>
+                <h1 class="text-5xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 py-2">КАЛИМАЁБ</h1>
+                <p class="text-sm text-slate-400">Суръати зеҳн, калимаҳои тоҷикӣ ва сабқати вақт</p>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <button id="menu-btn-play-classic" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-black text-lg rounded-2xl shadow-lg shadow-emerald-500/20 active:scale-95 transition duration-200 flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14H11V12h2v4zm0-6H11V8h2v2z"/></svg>
+                    БОЗИИ КЛАССИКӢ 🏆
+                </button>
+                <button id="menu-btn-play-infinite" class="w-full py-4 bg-gradient-to-r from-cyan-500 to-indigo-500 hover:from-cyan-600 hover:to-indigo-600 text-white font-black text-lg rounded-2xl shadow-lg shadow-cyan-500/20 active:scale-95 transition duration-200 flex items-center justify-center gap-3">
+                    <span>♾️</span>
+                    БОЗИИ БЕОХИР ♾️
+                </button>
+                <button id="menu-btn-achievements" class="w-full py-3 bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-800/80 font-bold rounded-2xl active:scale-95 transition duration-200 flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+                    ДАСТОВАРДҲО ВА РЕКОРДҲО
+                </button>
+                <button id="menu-btn-settings" class="w-full py-3 bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-800/80 font-bold rounded-2xl active:scale-95 transition duration-200 flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    ТАНЗИМОТИ БОЗӢ
+                </button>
+                <button id="menu-btn-exit" class="w-full py-3 bg-rose-950/20 hover:bg-rose-950/40 text-rose-400 border border-rose-900/30 font-bold rounded-2xl active:scale-95 transition duration-200 flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    БАРОМАДАН
+                </button>
+            </div>
+            
+            <p class="text-xs text-slate-500">Нусхаи 3.0 • Бозии Миллӣ</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="border-b border-slate-800/80 px-4 py-2 flex flex-col gap-2 max-w-md mx-auto w-full z-10">
+        <div class="flex justify-between items-center">
+            <button id="btn-back-menu" class="text-slate-400 hover:text-white transition duration-200 flex items-center gap-1 text-xs font-bold" title="Ба менюи асосӣ">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                МЕНЮ
+            </button>
+            <h1 class="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">КАЛИМАЁБ</h1>
+            <div class="flex gap-2 items-center">
+                <button id="btn-theme-toggle" class="p-1.5 text-slate-400 hover:text-white transition duration-200 rounded-lg" title="Мавзӯъи Рӯшан/Торик">
+                    <svg id="icon-theme-light" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+                    <svg id="icon-theme-dark" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+                <button id="btn-help" class="text-slate-400 hover:text-white transition duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </button>
+                <button id="btn-reload" class="text-slate-400 hover:text-white transition duration-200" title="Навсозии калима">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 15.89M21 21v-5h-.581m0 0a8.003 8.003 0 01-15.357-2F"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Word Length Selector Tabs -->
+        <div class="flex justify-between items-center bg-slate-900/90 dark:bg-slate-900/90 border border-slate-800 p-1.5 rounded-xl gap-1">
+            <span class="text-[10px] font-black uppercase text-slate-400 px-1">Ҳарф:</span>
+            <div class="flex flex-1 justify-around">
+                <button data-len="3" class="btn-len-tab px-2.5 py-0.5 text-xs font-black rounded-lg transition duration-200 text-slate-400 hover:text-white">3</button>
+                <button data-len="4" class="btn-len-tab px-2.5 py-0.5 text-xs font-black rounded-lg transition duration-200 text-slate-400 hover:text-white">4</button>
+                <button data-len="5" class="btn-len-tab px-2.5 py-0.5 text-xs font-black rounded-lg transition duration-200 text-slate-400 hover:text-white bg-emerald-500 text-white shadow-md">5</button>
+                <button data-len="6" class="btn-len-tab px-2.5 py-0.5 text-xs font-black rounded-lg transition duration-200 text-slate-400 hover:text-white">6</button>
+                <button data-len="7" class="btn-len-tab px-2.5 py-0.5 text-xs font-black rounded-lg transition duration-200 text-slate-400 hover:text-white">7</button>
+            </div>
+        </div>
+
+        <!-- Timer Bar UI Component -->
+        <div class="flex items-center gap-2 px-1">
+            <svg id="timer-icon" class="w-4 h-4 text-emerald-400 animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="flex-1 h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800 relative">
+                <div id="timer-progress" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-1000" style="width: 100%"></div>
+            </div>
+            <span id="timer-text" class="text-xs font-black font-mono text-emerald-400">02:00</span>
+        </div>
+    </header>
+
+    <!-- Main Game Area -->
+    <main class="flex-grow flex items-center justify-center p-2 z-10 relative">
+        <div id="board" class="grid grid-rows-6 gap-1.5 w-full mx-auto">
+            <!-- Dynamic cell grid populated by JavaScript code -->
+        </div>
+
+        <!-- Floating Hint Button -->
+        <button id="btn-hint" class="absolute bottom-1 right-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-3.5 py-2 rounded-full font-black text-xs shadow-lg shadow-amber-950/40 active:scale-95 transition-all flex items-center gap-1.5 z-20">
+            <span>ИШОРА 💡</span>
+            <span id="hint-status" class="bg-white/25 px-1.5 py-0.5 rounded-full text-[9px]">1 бори ройгон</span>
+        </button>
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-28 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white border border-slate-700/80 px-4 py-2.5 rounded-xl shadow-2xl font-bold text-sm z-50 opacity-0 pointer-events-none transition-all duration-300">
+        Паём
+    </div>
+
+    <!-- Virtual Keyboard -->
+    <section class="max-w-md w-full mx-auto px-2 pb-4 select-none z-10">
+        <div id="keyboard" class="flex flex-col gap-1.5">
+            <!-- Dynamic keyboard lines handled by JS scripts -->
+        </div>
+    </section>
+
+    <!-- Modal: Help / Rules -->
+    <div id="modal-help" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-slate-100">Қоидаҳои бозӣ</h3>
+                <button id="btn-close-help" class="text-slate-400 hover:text-white text-2xl font-black">&times;</button>
+            </div>
+            <div class="text-sm text-slate-300 space-y-3 leading-relaxed">
+                <p>Калимаи пинҳониро дар 6 кӯшиш ёбед.</p>
+                <p>Ҳар як сатҳ вобаста ба ҳарфҳо **вақтсанҷи маҳдуд** дорад! Шитобед, ки вақт ба охир нарасад.</p>
+                
+                <div class="space-y-2 border-t border-slate-800 pt-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-white">К</span>
+                        <span>Ҳарфи <strong>К</strong> дар калима ва дар ҷои дуруст аст.</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center font-bold text-white">И</span>
+                        <span>Ҳарфи <strong>И</strong> дар калима ҳаст, вале дар ҷои дигар.</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-slate-300">О</span>
+                        <span>Ҳарфи <strong>О</strong> дар калима умуман нест.</span>
+                    </div>
+                </div>
+            </div>
+            <button id="btn-start-playing" class="w-full mt-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition duration-200">Фаҳмидам, Оғоз мекунам!</button>
+        </div>
+    </div>
+
+    <!-- Modal: Achievements -->
+    <div id="modal-achievements" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button id="btn-close-achievements" class="absolute right-4 top-4 text-slate-400 hover:text-white text-2xl font-black">&times;</button>
+            <h3 class="text-xl font-black text-slate-100 text-center mb-5">Дастовардҳо ва Рекордҳо</h3>
+            
+            <div class="space-y-3 max-h-[320px] overflow-y-auto pr-1">
+                <!-- Achievement Item 1 -->
+                <div class="p-3 bg-slate-800/40 rounded-xl border border-slate-800 flex items-center gap-3">
+                    <div id="ach-icon-first-try" class="w-10 h-10 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center text-lg">🎯</div>
+                    <div class="flex-1 text-left">
+                        <p class="text-sm font-bold text-slate-200">Мерган</p>
+                        <p class="text-[10px] text-slate-400">Калимаро дар кӯшиши аввал ёбед.</p>
+                    </div>
+                    <span id="ach-badge-first-try" class="text-xs font-bold text-slate-500">Пӯшида</span>
+                </div>
+                <!-- Achievement Item 2 -->
+                <div class="p-3 bg-slate-800/40 rounded-xl border border-slate-800 flex items-center gap-3">
+                    <div id="ach-icon-all-levels" class="w-10 h-10 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center text-lg">🎓</div>
+                    <div class="flex-1 text-left">
+                        <p class="text-sm font-bold text-slate-200">Устоди Ҳамасаро</p>
+                        <p class="text-[10px] text-slate-400">Ҳамаи сатҳҳоро (3,4,5,6,7) якборӣ гузаред.</p>
+                    </div>
+                    <span id="ach-badge-all-levels" class="text-xs font-bold text-slate-500">Пӯшида</span>
+                </div>
+                <!-- Achievement Item 3 -->
+                <div class="p-3 bg-slate-800/40 rounded-xl border border-slate-800 flex items-center gap-3">
+                    <div id="ach-icon-speed" class="w-10 h-10 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center text-lg">⚡</div>
+                    <div class="flex-1 text-left">
+                        <p class="text-sm font-bold text-slate-200">Резбоз (Тезтоз)</p>
+                        <p class="text-[10px] text-slate-400">Ёфтани калима дар камтар аз 30 сония.</p>
+                    </div>
+                    <span id="ach-badge-speed" class="text-xs font-bold text-slate-500">Пӯшида</span>
+                </div>
+            </div>
+            
+            <button id="btn-reset-achievements" class="w-full mt-5 py-2 text-xs font-bold text-rose-400/80 hover:text-rose-400 border border-rose-950 rounded-xl transition">Пок кардани дастовардҳо</button>
+        </div>
+    </div>
+
+    <!-- Modal: Settings -->
+    <div id="modal-settings" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button id="btn-close-settings" class="absolute right-4 top-4 text-slate-400 hover:text-white text-2xl font-black">&times;</button>
+            <h3 class="text-xl font-black text-slate-100 text-center mb-6">Танзимот</h3>
+            
+            <div class="space-y-4">
+                <!-- Setting: Ambient Music Toggle -->
+                <div class="flex justify-between items-center p-3 bg-slate-800/40 border border-slate-800 rounded-xl">
+                    <div class="text-left">
+                        <p class="text-sm font-bold text-slate-200">Мусиқии заминавӣ 🎵</p>
+                        <p class="text-[10px] text-slate-400">Оҳанги ором барои фикрронӣ</p>
+                    </div>
+                    <button id="setting-music" class="px-4 py-1.5 bg-emerald-500 text-white font-black text-xs rounded-lg transition duration-200">ФАЪОЛ</button>
+                </div>
+
+                <!-- Setting: Sound Effects Toggle -->
+                <div class="flex justify-between items-center p-3 bg-slate-800/40 border border-slate-800 rounded-xl">
+                    <div class="text-left">
+                        <p class="text-sm font-bold text-slate-200">Садоҳо 🔊</p>
+                        <p class="text-[10px] text-slate-400">Садоҳои пахши клавиш ва амалҳо</p>
+                    </div>
+                    <button id="setting-sfx" class="px-4 py-1.5 bg-emerald-500 text-white font-black text-xs rounded-lg transition duration-200">ФАЪОЛ</button>
+                </div>
+            </div>
+
+            <button id="btn-save-settings" class="w-full mt-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition duration-200">ҲИФЗ КАРДАН</button>
+        </div>
+    </div>
+
+    <!-- Modal: Statistics & Game Over -->
+    <div id="modal-stats" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center">
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="text-xl font-bold text-slate-100 w-full text-center">Натиҷаҳо</h3>
+                <button id="btn-close-stats" class="text-slate-400 hover:text-white absolute right-6 top-6">&times;</button>
+            </div>
+            
+            <p id="stats-status-text" class="text-sm text-amber-400 font-black tracking-wider uppercase mb-1"></p>
+            <p id="stats-word-reveal" class="text-2xl font-black text-emerald-400 mb-4 tracking-widest uppercase"></p>
+            
+            <div class="grid grid-cols-4 gap-2 mb-6 text-slate-300">
+                <div class="bg-slate-800/50 p-2 rounded-xl">
+                    <div id="stat-played" class="text-xl font-extrabold text-white">0</div>
+                    <div class="text-[10px] uppercase text-slate-400 tracking-wide">Бозиҳо</div>
+                </div>
+                <div class="bg-slate-800/50 p-2 rounded-xl">
+                    <div id="stat-winpct" class="text-xl font-extrabold text-white">0%</div>
+                    <div class="text-[10px] uppercase text-slate-400 tracking-wide">% Ғалаба</div>
+                </div>
+                <div class="bg-slate-800/50 p-2 rounded-xl">
+                    <div id="stat-streak" class="text-xl font-extrabold text-white">0</div>
+                    <div class="text-[10px] uppercase text-slate-400 tracking-wide">Силсила</div>
+                </div>
+                <div class="bg-slate-800/50 p-2 rounded-xl">
+                    <div id="stat-maxstreak" class="text-xl font-extrabold text-white">0</div>
+                    <div class="text-[10px] uppercase text-slate-400 tracking-wide">Рекорд</div>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <button id="btn-share" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-950/30 flex items-center justify-center gap-2 transition duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 10.742l4.244-2.122m0 0A3.999 3.999 0 1115.5 8.5a3.999 3.999 0 01-2.572 2.242m1.232 4.016a3.999 3.999 0 11-2.022-2.312M12 11h.01M12 12h.01M12 13h.01M12 14h.01M11 12h2M12 11v2"></path></svg>
+                    Мубодилаи натиҷаҳо
+                </button>
+                <button id="btn-play-again" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition duration-200">
+                    Бозии Нав 🔄
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // WORD BANK CATEGORIZED BY LENGTH
+        const WORDS_BY_LENGTH = {
+            3: [
+                "НОН", "БОҒ", "ЧОЙ", "КӮҲ", "ГУЛ", "ПУЛ", "ДИЛ", "ШОҲ", "РОҲ", "МОҲ",
+                "КОР", "САР", "МОР", "БОД", "ДАР", "ЗАР", "ХАР", "ЧОҲ", "ШОД", "ТУТ",
+                "МӮЙ", "РӮЙ", "ПАЙ", "ЗОТ", "ТОР", "ХОК"
+            ],
+            4: [
+                "ОЛАМ", "УМЕД", "ДАРЁ", "ДӮСТ", "МЕҲР", "САБЗ", "СУРХ", "ОБОД", "ШАҲР", "ДАРС",
+                "САНГ", "БАРФ", "ХОНА", "ЗЕБО", "НОМА", "КӮЧА", "РӮЗӢ", "ҚАФА", "САРД", "ГАРМ",
+                "ҲАВО", "АҶАБ", "ОЗОД", "НАВӢ", "МӮЙӢ", "ИЛМИ", "ТИЛЛ", "НИМӢ", "ОТАШ"
+            ],
+            5: [
+                "КИТОБ", "ВАТАН", "МОДАР", "ПАДАР", "БАҲОР", "ҶАҲОН", "СУХАН", "ЗАМИН", "ИНСОН", "КӮДАК",
+                "ҚАЛАМ", "ҲУНАР", "ДАВАТ", "НОМУС", "МЕҲАН", "БОРОН", "ҶАВОН", "ДӮСТӢ", "ХОҲАР", "ЗАБОН",
+                "ҶАВОБ", "САВОЛ", "ТАЛАБ", "ШАРАФ", "ДАВЛА", "СОАТӢ", "УМЕДӢ", "ДАФТАР", "ШАҲРӢ"
+            ],
+            6: [
+                "ДАФТАР", "МАКТАБ", "ХИЗМАТ", "КОРГАР", "САРҲАД", "ТАЪРИХ", "ОЗОДӢ", "СӮЗАН", "МЕҲМОН", "САРБОЗ",
+                "ГУЛЗОР", "ШАБНАМ", "РАҲМАТ", "ДАЪВАТ", "ШАМШЕР", "СИЁҲӢ", "ПАРВОЗ", "АКСҲОИ", "ГУЛҲОИ", "РАҲОӢ",
+                "ШУҲРАТ", "ДУХТАР", "ЗИНДОН", "ДЕҲҚОН", "САЙЁҲӢ", "БОДОМӢ", "ҶАНГАЛ"
+            ],
+            7: [
+                "ТЕЛЕФОН", "ФАРҲАНГ", "МУАЛЛИМ", "БАРОДАР", "САЛОМАТ", "ҶАВОНӢ", "ИНҚИЛОБ", "КИТОБҲО", "ХОҲАРОН",
+                "ПАДАРОН", "МОДАРОН", "ДОНИШҶӮ", "ОФТОБӢ", "ҲАҚИҚАТ", "ҶАМЪИЯТ", "ХАРИДОР", "ИНСОНӢ", "ТОҶИКОН",
+                "МАТБУОТ", "ТАБИАТӢ", "ОЗОДАГӢ", "ҲАМКОРӢ", "СУХАНҲО", "ДАВЛАТӢ", "РӮЗНОМА"
+            ]
+        };
+
+        const THEMES = {
+            3: {
+                bg: "from-slate-950 via-emerald-950/40 to-slate-950",
+                color1: "bg-emerald-500/15",
+                color2: "bg-teal-500/15"
+            },
+            4: {
+                bg: "from-slate-950 via-cyan-950/40 to-slate-950",
+                color1: "bg-cyan-500/15",
+                color2: "bg-indigo-500/15"
+            },
+            5: {
+                bg: "from-slate-950 via-violet-950/40 to-slate-950",
+                color1: "bg-violet-500/15",
+                color2: "bg-fuchsia-500/15"
+            },
+            6: {
+                bg: "from-slate-950 via-rose-950/40 to-slate-950",
+                color1: "bg-rose-500/15",
+                color2: "bg-orange-500/15"
+            },
+            7: {
+                bg: "from-slate-950 via-amber-950/40 to-slate-950",
+                color1: "bg-amber-500/15",
+                color2: "bg-yellow-500/15"
+            }
+        };
+
+        // SOUND ENGINE (Web Audio API)
+        let audioCtx = null;
+        let ambientOsc = null;
+        let ambientGain = null;
+        let ambientPlaying = false;
+        let musicEnabled = true;
+        let sfxEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!sfxEnabled) return;
+            initAudio();
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'tap') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime); 
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'success') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.5);
+                } else if (type === 'error') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(110, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'flip') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(450, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                }
+            } catch (e) {
+                console.warn("Audio error", e);
+            }
+        }
+
+        // LOFI AMBIENT CHORDS & MELODIC ARPEGGIATOR SYNTHESIZER (DYNAMICS TUNED)
+        let ambientTimer = null;
+        let arpeggioTimer = null;
+        let chordIndex = 0;
+        const chords = [
+            [261.63, 329.63, 392.00, 493.88], // Cmaj7
+            [349.23, 440.00, 523.25, 659.25], // Fmaj7
+            [293.66, 349.23, 440.00, 587.33], // Dm7
+            [392.00, 493.88, 587.33, 698.46]  // G7
+        ];
+
+        function playAmbientChord() {
+            if (!musicEnabled || !ambientPlaying) return;
+            try {
+                const currentChord = chords[chordIndex];
+                chordIndex = (chordIndex + 1) % chords.length;
+
+                currentChord.forEach(freq => {
+                    const osc = audioCtx.createOscillator();
+                    const filter = audioCtx.createBiquadFilter();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 600;
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(ambientGain);
+
+                    const now = audioCtx.currentTime;
+                    gain.gain.setValueAtTime(0, now);
+                    // Slow attack (pad feel)
+                    gain.gain.linearRampToValueAtTime(0.015, now + 1.2);
+                    // Slow decay and release
+                    gain.gain.setValueAtTime(0.015, now + 2.8);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 4.2);
+
+                    osc.start(now);
+                    osc.stop(now + 4.3);
+                });
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+
+        // Beautiful rhythmic Arpeggiator to make lo-fi track dynamic
+        function playArpeggioStep() {
+            if (!musicEnabled || !ambientPlaying) return;
+            if (Math.random() > 0.6) return; // Airy, randomized notes
+            try {
+                const currentChord = chords[chordIndex];
+                const baseFreq = currentChord[Math.floor(Math.random() * currentChord.length)];
+                const freq = baseFreq * 2; // Arpeggio transposed 1 octave up
+
+                const osc = audioCtx.createOscillator();
+                const filter = audioCtx.createBiquadFilter();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                filter.type = 'lowpass';
+                filter.frequency.value = 800;
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(ambientGain);
+
+                const now = audioCtx.currentTime;
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(0.008, now + 0.1); // soft touch
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.0); // long decay
+
+                osc.start(now);
+                osc.stop(now + 1.1);
+            } catch(e){}
+        }
+
+        function startAmbientMusic() {
+            initAudio();
+            if (ambientPlaying) return;
+            
+            ambientPlaying = true;
+            ambientGain = audioCtx.createGain();
+            ambientGain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+            ambientGain.connect(audioCtx.destination);
+            
+            // Immediately start dynamic lo-fi scheduling loop
+            playAmbientChord();
+            ambientTimer = setInterval(playAmbientChord, 4500);
+            arpeggioTimer = setInterval(playArpeggioStep, 350); // fast dynamic arps
+        }
+
+        function stopAmbientMusic() {
+            ambientPlaying = false;
+            if (ambientTimer) {
+                clearInterval(ambientTimer);
+                ambientTimer = null;
+            }
+            if (arpeggioTimer) {
+                clearInterval(arpeggioTimer);
+                arpeggioTimer = null;
+            }
+            if (ambientGain) {
+                ambientGain.disconnect();
+                ambientGain = null;
+            }
+        }
+
+        // STATE STORAGE & CONFIGURATION
+        let wordLength = 5; 
+        let secretWord = "";
+        let currentGuess = [];
+        let currentRow = 0;
+        let gameOver = false;
+        let hintUsedThisGame = false;
+        let lightMode = false;
+        let infiniteMode = false;
+        
+        let stats = {
+            played: 0,
+            won: 0,
+            streak: 0,
+            maxStreak: 0,
+            guesses: []
+        };
+
+        let achievements = {
+            firstTry: false,
+            levelsCompleted: { 3: false, 4: false, 5: false, 6: false, 7: false },
+            speedguess: false
+        };
+
+        // Load Persistent Storage data
+        if (localStorage.getItem('wordle_tg_stats')) {
+            try { stats = JSON.parse(localStorage.getItem('wordle_tg_stats')); } catch (e) {}
+        }
+        if (localStorage.getItem('wordle_tg_achieve_v3')) {
+            try { achievements = JSON.parse(localStorage.getItem('wordle_tg_achieve_v3')); } catch (e) {}
+        }
+        if (localStorage.getItem('wordle_tg_lightmode')) {
+            lightMode = localStorage.getItem('wordle_tg_lightmode') === 'true';
+        }
+
+        const keyLayout = [
+            ["Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ҳ"],
+            ["Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "Ҷ", "Ӯ"],
+            ["ENTER", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", "Ғ", "Қ", "Ӣ", "BACKSPACE"]
+        ];
+
+        // TIMER PARAMETERS
+        let gameTimer = null;
+        let timeLeft = 0;
+        let initialTimeLimit = 0;
+        let startTime = 0;
+
+        function getTimerLimit(len) {
+            switch(len) {
+                case 3: return 60; // 1 minute
+                case 4: return 90; // 1.5 minutes
+                case 5: return 120; // 2 minutes
+                case 6: return 150; // 2.5 minutes
+                case 7: return 180; // 3 minutes
+                default: return 120;
+            }
+        }
+
+        function startTimer() {
+            clearInterval(gameTimer);
+            
+            if (infiniteMode) {
+                // If in infinite mode, we freeze the UI representations and exit countdown
+                document.getElementById('timer-text').innerText = "БЕОХИР ♾️";
+                const bar = document.getElementById('timer-progress');
+                bar.style.width = `100%`;
+                bar.className = "h-full bg-gradient-to-r from-teal-400 to-cyan-400";
+                return;
+            }
+
+            timeLeft = getTimerLimit(wordLength);
+            initialTimeLimit = timeLeft;
+            startTime = Date.now();
+            updateTimerUI();
+
+            gameTimer = setInterval(() => {
+                if (gameOver) {
+                    clearInterval(gameTimer);
+                    return;
+                }
+                timeLeft--;
+                updateTimerUI();
+                if (timeLeft <= 0) {
+                    clearInterval(gameTimer);
+                    triggerTimeOut();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            if (infiniteMode) return;
+
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const timerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timer-text').innerText = timerText;
+
+            const percentage = (timeLeft / initialTimeLimit) * 100;
+            const bar = document.getElementById('timer-progress');
+            bar.style.width = `${percentage}%`;
+
+            if (percentage < 25) {
+                bar.className = "h-full bg-gradient-to-r from-red-500 to-rose-600 transition-all duration-1000";
+                document.getElementById('timer-text').className = "text-xs font-black font-mono text-rose-500 animate-pulse";
+            } else if (percentage < 50) {
+                bar.className = "h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-1000";
+                document.getElementById('timer-text').className = "text-xs font-black font-mono text-amber-500";
+            } else {
+                bar.className = "h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-1000";
+                document.getElementById('timer-text').className = "text-xs font-black font-mono text-emerald-400";
+            }
+        }
+
+        function triggerTimeOut() {
+            gameOver = true;
+            playSound('error');
+            showToast("Вақт ба охир расид! ⏰");
+            updateStats(false);
+            setTimeout(showStatsModal, 1500);
+        }
+
+        const boardEl = document.getElementById('board');
+        const keyboardEl = document.getElementById('keyboard');
+
+        function applyTheme(len) {
+            const theme = THEMES[len];
+            const isLight = document.body.classList.contains('light-theme');
+            
+            if (isLight) {
+                document.body.className = `bg-[#fdfdfb] text-slate-900 min-h-screen flex flex-col justify-between overflow-hidden relative light-theme`;
+            } else {
+                document.body.className = `bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between overflow-hidden relative bg-gradient-to-b ${theme.bg}`;
+            }
+            
+            const glow1 = document.getElementById('glow-bg-1');
+            const glow2 = document.getElementById('glow-bg-2');
+            
+            glow1.className = `ambient-aurora w-80 h-80 top-1/4 -left-10 ${theme.color1}`;
+            glow2.className = `ambient-aurora w-96 h-96 bottom-1/4 -right-20 ${theme.color2}`;
+        }
+
+        function toggleTheme() {
+            lightMode = !lightMode;
+            localStorage.setItem('wordle_tg_lightmode', lightMode);
+            
+            if (lightMode) {
+                document.body.classList.add('light-theme');
+                document.getElementById('icon-theme-light').classList.remove('hidden');
+                document.getElementById('icon-theme-dark').classList.add('hidden');
+            } else {
+                document.body.classList.remove('light-theme');
+                document.getElementById('icon-theme-light').classList.add('hidden');
+                document.getElementById('icon-theme-dark').classList.remove('hidden');
+            }
+            applyTheme(wordLength);
+            
+            // Re-render keyboard & board elements to capture changes in color schemes
+            updateBoardColors();
+            initGame(); // Rebuild for gorgeous premium layouts
+        }
+
+        function updateBoardColors() {
+            // Repaint board grid borders based on dark/light values
+            for (let r = 0; r < 6; r++) {
+                for (let c = 0; c < wordLength; c++) {
+                    const cell = document.getElementById(`cell-${r}-${c}`);
+                    if (!cell) continue;
+                    
+                    const isCorrect = cell.classList.contains('bg-emerald-500');
+                    const isPresent = cell.classList.contains('bg-amber-500');
+                    const isAbsent = cell.classList.contains('bg-slate-800') || cell.classList.contains('bg-slate-300') || cell.classList.contains('bg-slate-700');
+
+                    if (!isCorrect && !isPresent && !isAbsent) {
+                        if (lightMode) {
+                            cell.classList.remove('border-slate-800/80');
+                            cell.classList.add('border-slate-200');
+                        } else {
+                            cell.classList.remove('border-slate-200');
+                            cell.classList.add('border-slate-800/80');
+                        }
+                    }
+                }
+            }
+        }
+
+        function initGame() {
+            const wordsPool = WORDS_BY_LENGTH[wordLength];
+            secretWord = wordsPool[Math.floor(Math.random() * wordsPool.length)].toUpperCase();
+            
+            currentGuess = [];
+            currentRow = 0;
+            gameOver = false;
+            hintUsedThisGame = false;
+            
+            document.getElementById('btn-hint').disabled = false;
+            document.getElementById('btn-hint').classList.remove('opacity-40');
+            document.getElementById('hint-status').innerText = "1 бори ройгон";
+
+            applyTheme(wordLength);
+            startTimer();
+
+            // Setup appropriate Light theme defaults on boot
+            if (lightMode) {
+                document.body.classList.add('light-theme');
+                document.getElementById('icon-theme-light').classList.remove('hidden');
+                document.getElementById('icon-theme-dark').classList.add('hidden');
+            }
+
+            // Rebuild grid board container
+            boardEl.innerHTML = '';
+            boardEl.style.aspectRatio = `${wordLength} / 6`;
+            
+            if (wordLength === 3) boardEl.style.maxWidth = "190px";
+            else if (wordLength === 4) boardEl.style.maxWidth = "250px";
+            else if (wordLength === 5) boardEl.style.maxWidth = "310px";
+            else if (wordLength === 6) boardEl.style.maxWidth = "360px";
+            else if (wordLength === 7) boardEl.style.maxWidth = "410px";
+
+            for (let r = 0; r < 6; r++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = `grid gap-1.5 w-full row-container-${r}`;
+                rowDiv.style.gridTemplateColumns = `repeat(${wordLength}, minmax(0, 1fr))`;
+                
+                for (let c = 0; c < wordLength; c++) {
+                    const cell = document.createElement('div');
+                    cell.id = `cell-${r}-${c}`;
+                    
+                    let textClass = "text-2xl font-black";
+                    if (wordLength === 3) textClass = "text-3xl font-black";
+                    else if (wordLength === 4) textClass = "text-2xl font-black";
+                    else if (wordLength === 5) textClass = "text-2xl font-black";
+                    else if (wordLength === 6) textClass = "text-xl font-bold";
+                    else if (wordLength === 7) textClass = "text-lg font-bold";
+
+                    const themeBorder = lightMode ? 'border-slate-200' : 'border-slate-800/80';
+                    const bgClass = lightMode ? 'bg-white' : 'bg-transparent';
+                    cell.className = `w-full aspect-square border-2 ${themeBorder} ${bgClass} rounded-xl flex items-center justify-center ${textClass} uppercase transition-all duration-300`;
+                    rowDiv.appendChild(cell);
+                }
+                boardEl.appendChild(rowDiv);
+            }
+
+            // Render virtual keyboard panel keys
+            keyboardEl.innerHTML = '';
+            keyLayout.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = "flex justify-center gap-1 w-full";
+                row.forEach(key => {
+                    const btn = document.createElement('button');
+                    btn.innerText = key;
+                    btn.setAttribute('data-key', key);
+                    
+                    if (key === 'ENTER' || key === 'BACKSPACE') {
+                        const specBtnBg = lightMode ? "bg-slate-200/90 text-slate-800 border border-slate-300 shadow-[0_2px_0px_#cbd5e1]" : "bg-slate-800 hover:bg-slate-700 text-slate-100";
+                        btn.className = `flex-1 min-w-[36px] h-11 ${specBtnBg} text-[10px] font-black rounded-lg transition-all active:scale-95 duration-100 flex items-center justify-center`;
+                        if (key === 'BACKSPACE') {
+                            btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z"></path></svg>`;
+                        }
+                    } else {
+                        const keyTheme = lightMode ? "keyboard-btn bg-white text-slate-800 border border-slate-200 shadow-[0_2px_0px_#e2e8f0] hover:bg-slate-50" : "bg-slate-800/80 text-slate-200 hover:bg-slate-700/90";
+                        btn.className = `w-7 sm:w-8 h-11 ${keyTheme} font-bold rounded-lg transition-all active:scale-95 duration-100 flex items-center justify-center text-xs sm:text-sm`;
+                    }
+
+                    btn.addEventListener('click', () => handleKeyPress(key));
+                    rowDiv.appendChild(btn);
+                });
+                keyboardEl.appendChild(rowDiv);
+            });
+            
+            if (!localStorage.getItem('wordle_tg_seen_help_v3')) {
+                showHelpModal();
+                localStorage.setItem('wordle_tg_seen_help_v3', 'true');
+            }
+        }
+
+        function showToast(message, duration = 2000) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.opacity = '1';
+            toast.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.pointerEvents = 'none';
+            }, duration);
+        }
+
+        function handleKeyPress(key) {
+            if (gameOver) return;
+
+            if (key === 'BACKSPACE') {
+                playSound('tap');
+                if (currentGuess.length > 0) {
+                    currentGuess.pop();
+                    updateBoard();
+                }
+            } else if (key === 'ENTER') {
+                if (currentGuess.length < wordLength) {
+                    playSound('error');
+                    shakeRow(currentRow);
+                    showToast("Ҳарфҳо нокифояанд!"); 
+                } else {
+                    submitGuess();
+                }
+            } else if (/^[А-ЯЁӢӮҲҚҶҒ]$/i.test(key)) {
+                if (currentGuess.length < wordLength) {
+                    playSound('tap');
+                    currentGuess.push(key.toUpperCase());
+                    updateBoard();
+                }
+            }
+        }
+
+        function updateBoard() {
+            for (let c = 0; c < wordLength; c++) {
+                const cell = document.getElementById(`cell-${currentRow}-${c}`);
+                if (currentGuess[c]) {
+                    if (cell.innerText !== currentGuess[c]) {
+                        cell.innerText = currentGuess[c];
+                        cell.classList.add('animate-pop');
+                        cell.classList.remove('border-slate-800/80', 'border-slate-200');
+                        
+                        const borderCls = lightMode ? 'border-slate-600' : 'border-slate-500';
+                        cell.classList.add(borderCls);
+                        if (lightMode) {
+                            cell.classList.add('bg-slate-100', 'text-slate-900');
+                        } else {
+                            cell.classList.add('text-white');
+                        }
+                    }
+                } else {
+                    cell.innerText = "";
+                    cell.classList.remove('animate-pop');
+                    cell.classList.remove('border-slate-500', 'border-slate-600', 'text-white', 'text-slate-900', 'bg-slate-100');
+                    const defaultBorder = lightMode ? 'border-slate-200' : 'border-slate-800/80';
+                    cell.classList.add(defaultBorder);
+                }
+            }
+        }
+
+        function shakeRow(row) {
+            const container = document.querySelector(`.row-container-${row}`);
+            if (container) {
+                container.classList.add('animate-shake');
+                setTimeout(() => {
+                    container.classList.remove('animate-shake');
+                }, 500);
+            }
+        }
+
+        function submitGuess() {
+            const guessWord = currentGuess.join('');
+            const rowCells = [];
+            for (let c = 0; c < wordLength; c++) {
+                rowCells.push(document.getElementById(`cell-${currentRow}-${c}`));
+            }
+
+            const secretLetters = secretWord.split('');
+            const letterStatuses = Array(wordLength).fill('absent'); 
+
+            // Phase 1: Match Exact Greens
+            for (let c = 0; c < wordLength; c++) {
+                if (currentGuess[c] === secretLetters[c]) {
+                    letterStatuses[c] = 'correct';
+                    secretLetters[c] = null; 
+                }
+            }
+
+            // Phase 2: Match Yellows
+            for (let c = 0; c < wordLength; c++) {
+                if (letterStatuses[c] !== 'correct') {
+                    const matchIdx = secretLetters.indexOf(currentGuess[c]);
+                    if (matchIdx !== -1) {
+                        letterStatuses[c] = 'present';
+                        secretLetters[matchIdx] = null; 
+                    }
+                }
+            }
+
+            const capturedLetters = [...currentGuess];
+            const capturedStatuses = [...letterStatuses];
+
+            // Phase 3: Synchronous cell flips and keys updates
+            rowCells.forEach((cell, index) => {
+                const letter = capturedLetters[index];
+                const status = capturedStatuses[index];
+
+                setTimeout(() => {
+                    cell.classList.add('animate-flip');
+                    playSound('flip');
+
+                    setTimeout(() => {
+                        let colorClass = lightMode ? 'bg-slate-400 border-slate-400' : 'bg-slate-800 border-slate-700'; 
+                        let keyboardStatus = 'absent';
+
+                        if (status === 'correct') {
+                            colorClass = 'bg-emerald-500 border-emerald-500 text-white';
+                            keyboardStatus = 'correct';
+                        } else if (status === 'present') {
+                            colorClass = 'bg-amber-500 border-amber-500 text-white';
+                            keyboardStatus = 'present';
+                        }
+
+                        let textClass = "text-2xl font-black";
+                        if (wordLength === 3) textClass = "text-3xl font-black";
+                        else if (wordLength === 4) textClass = "text-2xl font-black";
+                        else if (wordLength === 5) textClass = "text-2xl font-black";
+                        else if (wordLength === 6) textClass = "text-xl font-bold";
+                        else if (wordLength === 7) textClass = "text-lg font-bold";
+
+                        cell.className = `w-full aspect-square border-2 ${colorClass} rounded-xl flex items-center justify-center ${textClass} uppercase text-white animate-flip`;
+                        
+                        updateKeyboardStyle(letter, keyboardStatus);
+                    }, 300);
+
+                    setTimeout(() => {
+                        cell.classList.remove('animate-flip');
+                    }, 650);
+
+                }, index * 130);
+            });
+
+            setTimeout(() => {
+                if (guessWord === secretWord) {
+                    gameOver = true;
+                    playSound('success');
+                    
+                    rowCells.forEach((cell, idx) => {
+                        setTimeout(() => {
+                            cell.classList.add('animate-bounce-success');
+                        }, idx * 80);
+                    });
+                    
+                    showToast("Офарин! Ёфтед! 🏆", 3500);
+                    updateStats(true);
+                    checkAchievements(true);
+                    setTimeout(showStatsModal, 1800);
+                } else if (currentRow === 5) {
+                    gameOver = true;
+                    playSound('error');
+                    showToast(`Ҷавоб: ${secretWord}`, 4000);
+                    updateStats(false);
+                    checkAchievements(false);
+                    setTimeout(showStatsModal, 2200);
+                } else {
+                    currentRow++;
+                    currentGuess = []; 
+                }
+            }, wordLength * 130 + 500);
+        }
+
+        function updateKeyboardStyle(char, status) {
+            const btn = document.querySelector(`button[data-key="${char}"]`);
+            if (!btn) return;
+
+            const hasCorrect = btn.classList.contains('bg-emerald-500');
+            const hasPresent = btn.classList.contains('bg-amber-500');
+
+            if (status === 'correct') {
+                btn.className = "w-7 sm:w-8 h-11 bg-emerald-500 text-white font-bold rounded-lg flex items-center justify-center text-xs sm:text-sm transition-all duration-300";
+            } else if (status === 'present' && !hasCorrect) {
+                btn.className = "w-7 sm:w-8 h-11 bg-amber-500 text-white font-bold rounded-lg flex items-center justify-center text-xs sm:text-sm transition-all duration-300";
+            } else if (status === 'absent' && !hasCorrect && !hasPresent) {
+                const absentStyle = lightMode ? "bg-slate-300 text-slate-500 opacity-50" : "bg-slate-900 text-slate-500 opacity-40";
+                btn.className = `w-7 sm:w-8 h-11 ${absentStyle} font-bold rounded-lg flex items-center justify-center text-xs sm:text-sm transition-all duration-300`;
+            }
+        }
+
+        // HINT FUNCTIONALITY (BUG RESOLVED - MAPPED AND SECURED DIRECTLY TO THE CURRENT GUESS ARRAY WITHOUT SKEWS)
+        function useHint() {
+            if (gameOver || hintUsedThisGame) return;
+            
+            // If user has already typed maximum word length, hint shouldn't overwrite blindly
+            if (currentGuess.length >= wordLength) {
+                showToast("Барои ишора аввал як ҳарфро тоза кунед!");
+                return;
+            }
+            
+            initAudio();
+
+            // Find the index of the next letter to fill
+            const nextIdx = currentGuess.length;
+            const letterToReveal = secretWord[nextIdx];
+
+            // Push revealed letter into current guess directly
+            currentGuess.push(letterToReveal);
+            updateBoard();
+            playSound('tap');
+
+            // Save state of hint consumption
+            hintUsedThisGame = true;
+            document.getElementById('btn-hint').disabled = true;
+            document.getElementById('btn-hint').classList.add('opacity-40');
+            document.getElementById('hint-status').innerText = "Истифода шуд";
+            showToast(`Ишора: Ҳарфи навбатии "${letterToReveal}" кушода шуд!`);
+        }
+
+        function updateStats(won) {
+            stats.played++;
+            if (won) {
+                stats.won++;
+                stats.streak++;
+                stats.maxStreak = Math.max(stats.streak, stats.maxStreak);
+                stats.guesses.push(currentRow + 1);
+            } else {
+                stats.streak = 0;
+            }
+            localStorage.setItem('wordle_tg_stats', JSON.stringify(stats));
+        }
+
+        function checkAchievements(won) {
+            if (!won) return;
+
+            // 1. Sniper (First try guess)
+            if (currentRow === 0) {
+                achievements.firstTry = true;
+                showToast("Дастоварди нав: 🎯 Мерган (Снайпер) кушода шуд!");
+            }
+
+            // 2. Speed guessing (under 30s)
+            const elapsedTime = (Date.now() - startTime) / 1000;
+            if (!infiniteMode && elapsedTime <= 30) {
+                achievements.speedguess = true;
+                showToast("Дастоварди нав: ⚡ Резбоз (Тезтоз) кушода шуд!");
+            }
+
+            // 3. Complete all word lengths
+            achievements.levelsCompleted[wordLength] = true;
+            const completedAll = [3, 4, 5, 6, 7].every(l => achievements.levelsCompleted[l]);
+            if (completedAll && !achievements.allLevelsCompleted) {
+                achievements.allLevelsCompleted = true;
+                showToast("Дастоварди нав: 🎓 Устоди Ҳамасаро кушода шуд!");
+            }
+
+            localStorage.setItem('wordle_tg_achieve_v3', JSON.stringify(achievements));
+        }
+
+        function showStatsModal() {
+            document.getElementById('stat-played').innerText = stats.played;
+            const winPct = stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0;
+            document.getElementById('stat-winpct').innerText = `${winPct}%`;
+            document.getElementById('stat-streak').innerText = stats.streak;
+            document.getElementById('stat-maxstreak').innerText = stats.maxStreak;
+            
+            const revealWordEl = document.getElementById('stats-word-reveal');
+            const statusTextEl = document.getElementById('stats-status-text');
+
+            if (gameOver) {
+                if (!infiniteMode && timeLeft <= 0) {
+                    statusTextEl.innerText = "Вақт ба охир расид! ⏱️";
+                } else if (currentGuess.join('') === secretWord) {
+                    statusTextEl.innerText = "Ғалаба! 🎉";
+                } else {
+                    statusTextEl.innerText = "Бозӣ анҷом ёфт! 💔";
+                }
+                revealWordEl.innerText = `${secretWord}`;
+            } else {
+                statusTextEl.innerText = "";
+                revealWordEl.innerText = "";
+            }
+
+            document.getElementById('modal-stats').classList.remove('hidden');
+        }
+
+        function renderAchievementsList() {
+            // First Try Badge
+            const badg1 = document.getElementById('ach-badge-first-try');
+            const icon1 = document.getElementById('ach-icon-first-try');
+            if (achievements.firstTry) {
+                badg1.innerText = "Кушода";
+                badg1.className = "text-xs font-black text-emerald-400";
+                icon1.className = "w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-lg";
+            }
+
+            // Speedguess Badge
+            const badg3 = document.getElementById('ach-badge-speed');
+            const icon3 = document.getElementById('ach-icon-speed');
+            if (achievements.speedguess) {
+                badg3.innerText = "Кушода";
+                badg3.className = "text-xs font-black text-emerald-400";
+                icon3.className = "w-10 h-10 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-lg";
+            }
+
+            // All Levels Badge
+            const badg2 = document.getElementById('ach-badge-all-levels');
+            const icon2 = document.getElementById('ach-icon-all-levels');
+            const completedCount = [3, 4, 5, 6, 7].filter(l => achievements.levelsCompleted[l]).length;
+            
+            if (completedCount === 5) {
+                badg2.innerText = "Кушода";
+                badg2.className = "text-xs font-black text-emerald-400";
+                icon2.className = "w-10 h-10 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 flex items-center justify-center text-lg";
+            } else {
+                badg2.innerText = `${completedCount}/5`;
+                badg2.className = "text-xs font-black text-slate-400";
+            }
+        }
+
+        function generateShareGrid() {
+            let gridText = `Калимаёб бо забони тоҷикӣ 🇹🇯 (Сатҳ: ${wordLength}-ҳарфа)\n`;
+            gridText += `Кӯшиш: ${gameOver && currentGuess.join('') === secretWord ? currentRow + 1 : 'X'}/6\n\n`;
+
+            for (let r = 0; r <= (gameOver ? currentRow : 5); r++) {
+                let rowStr = '';
+                for (let c = 0; c < wordLength; c++) {
+                    const cell = document.getElementById(`cell-${r}-${c}`);
+                    if (!cell) continue;
+                    if (cell.classList.contains('bg-emerald-500')) {
+                        rowStr += '🟩';
+                    } else if (cell.classList.contains('bg-amber-500')) {
+                        rowStr += '🟨';
+                    } else {
+                        rowStr += '⬛';
+                    }
+                }
+                gridText += rowStr + '\n';
+            }
+            return gridText;
+        }
+
+        function shareGame() {
+            const shareText = generateShareGrid();
+            
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = shareText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("Нусхабардорӣ шуд! Ба дӯстон фиристед! 📲");
+                } else {
+                    showToast("Нусхабардорӣ карда нашуд.");
+                }
+            } catch (err) {
+                showToast("Хатогии нусхабардорӣ.");
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        function showHelpModal() {
+            document.getElementById('modal-help').classList.remove('hidden');
+        }
+
+        function closeHelpModal() {
+            document.getElementById('modal-help').classList.add('hidden');
+        }
+
+        function closeStatsModal() {
+            document.getElementById('modal-stats').classList.add('hidden');
+        }
+
+        // INPUT EVENT LISTENERS AND KEY MAPPINGS
+        document.addEventListener('keydown', (e) => {
+            // Avoid capturing typing events if configuration modal popups are open
+            if (!document.getElementById('screen-menu').classList.contains('hidden')) return;
+            if (!document.getElementById('modal-help').classList.contains('hidden')) return;
+            if (!document.getElementById('modal-stats').classList.contains('hidden')) return;
+            if (!document.getElementById('modal-achievements').classList.contains('hidden')) return;
+            if (!document.getElementById('modal-settings').classList.contains('hidden')) return;
+
+            let key = e.key.toUpperCase();
+            if (key === 'ENTER') {
+                handleKeyPress('ENTER');
+            } else if (key === 'BACKSPACE') {
+                handleKeyPress('BACKSPACE');
+            } else {
+                const mapping = {
+                    "Ī": "Ӣ", "Ū": "Ӯ", "Ҳ": "Ҳ", "Қ": "Қ", "Ҷ": "Ҷ", "Ғ": "Ғ"
+                };
+                if (mapping[key]) {
+                    handleKeyPress(mapping[key]);
+                } else if (/^[А-ЯЁӢӮҲҚҶҒ]$/i.test(key)) {
+                    handleKeyPress(key);
+                }
+            }
+        });
+
+        // TABS SWITCHING LOGIC (WORD LENGTHS)
+        document.querySelectorAll('.btn-len-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const targetLen = parseInt(e.target.getAttribute('data-len'));
+                if (targetLen === wordLength) return;
+
+                playSound('tap');
+                
+                document.querySelectorAll('.btn-len-tab').forEach(b => {
+                    b.className = "btn-len-tab px-2.5 py-0.5 text-xs font-black rounded-lg transition duration-200 text-slate-400 hover:text-white";
+                });
+                e.target.className = "btn-len-tab px-2.5 py-0.5 text-xs font-black rounded-lg transition duration-200 bg-emerald-500 text-white shadow-md";
+                
+                wordLength = targetLen;
+                initGame();
+            });
+        });
+
+        // DOM EVENTS REGISTRATION AND ASSIGNMENTS
+        document.getElementById('btn-help').addEventListener('click', showHelpModal);
+        document.getElementById('btn-close-help').addEventListener('click', closeHelpModal);
+        document.getElementById('btn-start-playing').addEventListener('click', closeHelpModal);
+        
+        document.getElementById('btn-close-stats').addEventListener('click', closeStatsModal);
+        document.getElementById('btn-share').addEventListener('click', shareGame);
+        
+        document.getElementById('btn-reload').addEventListener('click', () => {
+            playSound('tap');
+            initGame();
+        });
+        document.getElementById('btn-play-again').addEventListener('click', () => {
+            closeStatsModal();
+            initGame();
+        });
+
+        // Dynamic click trigger to boot up Ambient Track to dodge browser security guardrails
+        document.body.addEventListener('click', () => {
+            if (musicEnabled && !ambientPlaying) {
+                startAmbientMusic();
+            }
+        }, { once: true });
+
+        // Core Screens Routing Events
+        document.getElementById('menu-btn-play-classic').addEventListener('click', () => {
+            infiniteMode = false;
+            initAudio();
+            if (musicEnabled) startAmbientMusic();
+            document.getElementById('screen-menu').classList.add('hidden');
+            initGame();
+        });
+
+        document.getElementById('menu-btn-play-infinite').addEventListener('click', () => {
+            infiniteMode = true;
+            initAudio();
+            if (musicEnabled) startAmbientMusic();
+            document.getElementById('screen-menu').classList.add('hidden');
+            initGame();
+        });
+
+        document.getElementById('btn-back-menu').addEventListener('click', () => {
+            playSound('tap');
+            clearInterval(gameTimer);
+            document.getElementById('screen-menu').classList.remove('hidden');
+        });
+
+        document.getElementById('menu-btn-achievements').addEventListener('click', () => {
+            playSound('tap');
+            renderAchievementsList();
+            document.getElementById('modal-achievements').classList.remove('hidden');
+        });
+
+        document.getElementById('btn-close-achievements').addEventListener('click', () => {
+            playSound('tap');
+            document.getElementById('modal-achievements').classList.add('hidden');
+        });
+
+        document.getElementById('menu-btn-settings').addEventListener('click', () => {
+            playSound('tap');
+            // Refresh settings buttons state
+            document.getElementById('setting-music').innerText = musicEnabled ? "ФАЪОЛ" : "ХОМӮШ";
+            document.getElementById('setting-music').className = musicEnabled ? "px-4 py-1.5 bg-emerald-500 text-white font-black text-xs rounded-lg transition duration-200" : "px-4 py-1.5 bg-slate-700 text-slate-300 font-black text-xs rounded-lg transition duration-200";
+
+            document.getElementById('setting-sfx').innerText = sfxEnabled ? "ФАЪОЛ" : "ХОМӮШ";
+            document.getElementById('setting-sfx').className = sfxEnabled ? "px-4 py-1.5 bg-emerald-500 text-white font-black text-xs rounded-lg transition duration-200" : "px-4 py-1.5 bg-slate-700 text-slate-300 font-black text-xs rounded-lg transition duration-200";
+
+            document.getElementById('modal-settings').classList.remove('hidden');
+        });
+
+        document.getElementById('btn-close-settings').addEventListener('click', () => {
+            playSound('tap');
+            document.getElementById('modal-settings').classList.add('hidden');
+        });
+
+        document.getElementById('btn-save-settings').addEventListener('click', () => {
+            playSound('tap');
+            document.getElementById('modal-settings').classList.add('hidden');
+        });
+
+        // Music settings event handlers
+        document.getElementById('setting-music').addEventListener('click', (e) => {
+            musicEnabled = !musicEnabled;
+            initAudio();
+            if (musicEnabled) {
+                startAmbientMusic();
+                e.target.innerText = "ФАЪОЛ";
+                e.target.className = "px-4 py-1.5 bg-emerald-500 text-white font-black text-xs rounded-lg transition duration-200";
+            } else {
+                stopAmbientMusic();
+                e.target.innerText = "ХОМӮШ";
+                e.target.className = "px-4 py-1.5 bg-slate-700 text-slate-300 font-black text-xs rounded-lg transition duration-200";
+            }
+        });
+
+        document.getElementById('setting-sfx').addEventListener('click', (e) => {
+            sfxEnabled = !sfxEnabled;
+            playSound('tap');
+            if (sfxEnabled) {
+                e.target.innerText = "ФАЪОЛ";
+                e.target.className = "px-4 py-1.5 bg-emerald-500 text-white font-black text-xs rounded-lg transition duration-200";
+            } else {
+                e.target.innerText = "ХОМӮШ";
+                e.target.className = "px-4 py-1.5 bg-slate-700 text-slate-300 font-black text-xs rounded-lg transition duration-200";
+            }
+        });
+
+        document.getElementById('btn-hint').addEventListener('click', useHint);
+        document.getElementById('btn-theme-toggle').addEventListener('click', toggleTheme);
+
+        document.getElementById('menu-btn-exit').addEventListener('click', () => {
+            playSound('tap');
+            showToast("Барои баромадан равзанаи браузерро пӯшед 🖥️");
+        });
+
+        document.getElementById('btn-reset-achievements').addEventListener('click', () => {
+            achievements = {
+                firstTry: false,
+                levelsCompleted: { 3: false, 4: false, 5: false, 6: false, 7: false },
+                speedguess: false
+            };
+            localStorage.setItem('wordle_tg_achieve_v3', JSON.stringify(achievements));
+            renderAchievementsList();
+            showToast("Дастовардҳо тоза карда шуданд!");
+        });
+
+        window.onload = function () {
+            // Apply lightmode defaults on initial reload if stored in storage memory
+            if (lightMode) {
+                document.body.classList.add('light-theme');
+                document.getElementById('icon-theme-light').classList.remove('hidden');
+                document.getElementById('icon-theme-dark').classList.add('hidden');
+            }
+        };
+    </script>
+</body>
+</html>
